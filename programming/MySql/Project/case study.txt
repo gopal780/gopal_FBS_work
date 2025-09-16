@@ -1,0 +1,596 @@
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.42 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE FlightReservation;
+Query OK, 1 row affected (0.06 sec)
+
+mysql> USE FlightReservation;
+Database changed
+mysql> CREATE TABLE Aircraft (
+    ->     a_id INT PRIMARY KEY,                      -- Unique aircraft ID
+    ->     a_name VARCHAR(100),                       -- Aircraft name
+    ->     type VARCHAR(50),                          -- Aircraft type (e.g., passenger, cargo)
+    ->     fuel_capacity DECIMAL(10,2),               -- Fuel capacity in liters or gallons
+    ->     seat_capacity INT,                         -- Total number of seats
+    ->     language_capacity INT,                     -- Number of supported languages (e.g., for entertainment system)
+    ->     registration_number VARCHAR(50) UNIQUE,    -- Aircraft registration number
+    ->     model VARCHAR(100)                         -- Aircraft model (e.g., Boeing 737)
+    -> );
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> INSERT INTO Aircraft (a_id, a_name, type, fuel_capacity, seat_capacity, language_capacity, registration_number, model)
+    -> VALUES
+    -> (1, 'SkyJet Alpha', 'Passenger', 18300.50, 180, 6, 'VT-SJA001', 'Airbus A320'),
+    -> (2, 'CloudRunner 7', 'Passenger', 24200.75, 220, 8, 'VT-CR702', 'Boeing 737 MAX'),
+    -> (3, 'EagleXpress', 'Cargo', 32000.00, 0, 2, 'VT-EGX003', 'Boeing 747F'),
+    -> (4, 'JetNova', 'Passenger', 19800.25, 150, 5, 'VT-JNV004', 'Embraer E190'),
+    -> (5, 'FalconFlyer', 'Passenger', 27500.00, 300, 10, 'VT-FFL005', 'Airbus A350'),
+    -> (6, 'CargoTitan', 'Cargo', 35000.00, 0, 3, 'VT-CTN006', 'Antonov An-124'),
+    -> (7, 'SkyArrow', 'Passenger', 16000.00, 120, 4, 'VT-SAR007', 'Bombardier CRJ900'),
+    -> (8, 'JetStream Pro', 'Passenger', 21000.00, 200, 7, 'VT-JSP008', 'Boeing 757'),
+    -> (9, 'Nimbus Hauler', 'Cargo', 30000.00, 0, 2, 'VT-NMH009', 'McDonnell Douglas MD-11F'),
+    -> (10, 'AeroSwift', 'Passenger', 19000.00, 170, 6, 'VT-ASW010', 'Airbus A319');
+Query OK, 10 rows affected (0.08 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from Aircraft;
++------+---------------+-----------+---------------+---------------+-------------------+---------------------+--------------------------+
+| a_id | a_name        | type      | fuel_capacity | seat_capacity | language_capacity | registration_number | model                    |
++------+---------------+-----------+---------------+---------------+-------------------+---------------------+--------------------------+
+|    1 | SkyJet Alpha  | Passenger |      18300.50 |           180 |                 6 | VT-SJA001           | Airbus A320              |
+|    2 | CloudRunner 7 | Passenger |      24200.75 |           220 |                 8 | VT-CR702            | Boeing 737 MAX           |
+|    3 | EagleXpress   | Cargo     |      32000.00 |             0 |                 2 | VT-EGX003           | Boeing 747F              |
+|    4 | JetNova       | Passenger |      19800.25 |           150 |                 5 | VT-JNV004           | Embraer E190             |
+|    5 | FalconFlyer   | Passenger |      27500.00 |           300 |                10 | VT-FFL005           | Airbus A350              |
+|    6 | CargoTitan    | Cargo     |      35000.00 |             0 |                 3 | VT-CTN006           | Antonov An-124           |
+|    7 | SkyArrow      | Passenger |      16000.00 |           120 |                 4 | VT-SAR007           | Bombardier CRJ900        |
+|    8 | JetStream Pro | Passenger |      21000.00 |           200 |                 7 | VT-JSP008           | Boeing 757               |
+|    9 | Nimbus Hauler | Cargo     |      30000.00 |             0 |                 2 | VT-NMH009           | McDonnell Douglas MD-11F |
+|   10 | AeroSwift     | Passenger |      19000.00 |           170 |                 6 | VT-ASW010           | Airbus A319              |
++------+---------------+-----------+---------------+---------------+-------------------+---------------------+--------------------------+
+10 rows in set (0.04 sec)
+
+mysql> CREATE TABLE Passport (
+    ->     pass_id INT PRIMARY KEY,                      -- Unique passport ID
+    ->     person_name VARCHAR(100),                     -- Full name of the passport holder
+    ->     age INT,                                      -- Age of the person
+    ->     country VARCHAR(50),                          -- Country of citizenship
+    ->     gender VARCHAR(10),                           -- Gender (e.g., Male, Female, Other)
+    ->     date_of_birth DATE,                           -- Date of birth
+    ->     date_of_issue DATE,                           -- Passport issue date
+    ->     date_of_expiry DATE,                          -- Passport expiry date
+    ->     type VARCHAR(20)                              -- Passport type (e.g., Regular, Diplomatic)
+    -> );
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> INSERT INTO Passport (pass_id, person_name, age, country, gender, date_of_birth, date_of_issue, date_of_expiry, type)
+    -> VALUES
+    -> (1, 'Aarav Mehta', 32, 'India', 'Male', '1993-05-12', '2020-06-01', '2030-06-01', 'Regular'),
+    -> (2, 'Emily Zhang', 28, 'China', 'Female', '1997-03-22', '2021-04-15', '2031-04-15', 'Regular'),
+    -> (3, 'Carlos Rivera', 45, 'Mexico', 'Male', '1980-11-08', '2019-01-10', '2029-01-10', 'Diplomatic'),
+    -> (4, 'Fatima Al-Mansoori', 36, 'UAE', 'Female', '1989-07-30', '2022-02-20', '2032-02-20', 'Regular'),
+    -> (5, 'John Smith', 52, 'USA', 'Male', '1973-09-14', '2018-08-01', '2028-08-01', 'Regular'),
+    -> (6, 'Priya Nair', 29, 'India', 'Female', '1996-01-05', '2023-03-10', '2033-03-10', 'Regular'),
+    -> (7, 'Liam O’Connor', 41, 'Ireland', 'Male', '1984-12-19', '2020-10-25', '2030-10-25', 'Regular'),
+    -> (8, 'Sara Müller', 34, 'Germany', 'Female', '1991-06-07', '2021-07-01', '2031-07-01', 'Regular'),
+    -> (9, 'Takeshi Yamamoto', 39, 'Japan', 'Male', '1986-04-03', '2022-05-12', '2032-05-12', 'Regular'),
+    -> (10, 'Amina Yusuf', 27, 'Kenya', 'Female', '1998-08-16', '2023-01-20', '2033-01-20', 'Regular'),
+    -> (11, 'David Lee', 31, 'South Korea', 'Male', '1994-10-11', '2020-09-05', '2030-09-05', 'Regular'),
+    -> (12, 'Isabella Rossi', 38, 'Italy', 'Female', '1987-02-28', '2019-11-30', '2029-11-30', 'Regular'),
+    -> (13, 'Mohammed Khan', 44, 'Pakistan', 'Male', '1981-03-15', '2018-06-18', '2028-06-18', 'Diplomatic'),
+    -> (14, 'Chloe Dubois', 26, 'France', 'Female', '1999-12-01', '2023-04-10', '2033-04-10', 'Regular'),
+    -> (15, 'Igor Petrov', 50, 'Russia', 'Male', '1975-07-22', '2017-03-01', '2027-03-01', 'Regular'),
+    -> (16, 'Nandini Rao', 33, 'India', 'Female', '1992-09-09', '2021-12-15', '2031-12-15', 'Regular'),
+    -> (17, 'William Brown', 47, 'Canada', 'Male', '1978-05-25', '2019-08-20', '2029-08-20', 'Regular'),
+    -> (18, 'Sofia Silva', 30, 'Brazil', 'Female', '1995-11-13', '2022-06-30', '2032-06-30', 'Regular'),
+    -> (19, 'Ahmed El-Sayed', 42, 'Egypt', 'Male', '1983-01-17', '2020-02-05', '2030-02-05', 'Regular'),
+    -> (20, 'Yuki Tanaka', 25, 'Japan', 'Female', '2000-10-29', '2024-01-01', '2034-01-01', 'Regular');
+Query OK, 20 rows affected (0.05 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Passenger (
+    ->     p_id INT PRIMARY KEY,                          -- Unique passenger ID
+    ->     pass_id INT,                                   -- Foreign key to Passport
+    ->     phone_no VARCHAR(15),                          -- Contact number
+    ->     p_email VARCHAR(100),                          -- Email address
+    ->     seat_preference VARCHAR(50),                   -- Preferred seat (e.g., Window, Aisle)
+    ->
+    ->     -- Foreign key constraint
+    ->     FOREIGN KEY (pass_id) REFERENCES Passport(pass_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> INSERT INTO Passenger (p_id, pass_id, phone_no, p_email, seat_preference)
+    -> VALUES
+    -> (1, 1, '9876543210', 'aarav.mehta@example.com', 'Window'),
+    -> (2, 2, '9123456780', 'emily.zhang@example.cn', 'Aisle'),
+    -> (3, 3, '9988776655', 'carlos.rivera@example.mx', 'Window'),
+    -> (4, 4, '9001122334', 'fatima.mansoori@example.ae', 'Middle'),
+    -> (5, 5, '8899001122', 'john.smith@example.us', 'Aisle'),
+    -> (6, 6, '9870011223', 'priya.nair@example.in', 'Window'),
+    -> (7, 7, '9123004455', 'liam.oconnor@example.ie', 'Aisle'),
+    -> (8, 8, '9988007766', 'sara.mueller@example.de', 'Window'),
+    -> (9, 9, '9009988776', 'takeshi.yamamoto@example.jp', 'Aisle'),
+    -> (10, 10, '8899112233', 'amina.yusuf@example.ke', 'Window'),
+    -> (11, 11, '9876543201', 'david.lee@example.kr', 'Middle'),
+    -> (12, 12, '9123456702', 'isabella.rossi@example.it', 'Window'),
+    -> (13, 13, '9988776603', 'mohammed.khan@example.pk', 'Aisle'),
+    -> (14, 14, '9001122304', 'chloe.dubois@example.fr', 'Window'),
+    -> (15, 15, '8899001105', 'igor.petrov@example.ru', 'Middle'),
+    -> (16, 16, '9870011206', 'nandini.rao@example.in', 'Aisle'),
+    -> (17, 17, '9123004407', 'william.brown@example.ca', 'Window'),
+    -> (18, 18, '9988007708', 'sofia.silva@example.br', 'Aisle'),
+    -> (19, 19, '9009988709', 'ahmed.elsayed@example.eg', 'Window'),
+    -> (20, 20, '8899112200', 'yuki.tanaka@example.jp', 'Middle');
+Query OK, 20 rows affected (0.06 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> show tables:
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':' at line 1
+mysql> show tables;
++-----------------------------+
+| Tables_in_flightreservation |
++-----------------------------+
+| aircraft                    |
+| passenger                   |
+| passport                    |
++-----------------------------+
+3 rows in set (0.07 sec)
+
+mysql> CREATE TABLE Crew (
+    ->     c_id INT PRIMARY KEY,                      -- Unique crew member ID
+    ->     c_name VARCHAR(100),                       -- Full name of the crew member
+    ->     gender VARCHAR(10),                        -- Gender (e.g., Male, Female, Other)
+    ->     salary DECIMAL(10,2),                      -- Monthly salary
+    ->     designation VARCHAR(50),                   -- Role (e.g., Pilot, Attendant, Engineer)
+    ->     age INT                                    -- Age of the crew member
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO Crew (c_id, c_name, gender, salary, designation, age)
+    -> VALUES
+    -> (1, 'Rajiv Sharma', 'Male', 85000.00, 'Pilot', 45),
+    -> (2, 'Anita Desai', 'Female', 65000.00, 'Flight Attendant', 29),
+    -> (3, 'Mohammed Abbas', 'Male', 78000.00, 'Co-Pilot', 38),
+    -> (4, 'Emily Carter', 'Female', 67000.00, 'Flight Attendant', 32),
+    -> (5, 'Daniel Kim', 'Male', 90000.00, 'Pilot', 50),
+    -> (6, 'Priya Menon', 'Female', 62000.00, 'Flight Attendant', 27),
+    -> (7, 'Carlos Mendez', 'Male', 72000.00, 'Engineer', 40),
+    -> (8, 'Fatima Noor', 'Female', 68000.00, 'Flight Attendant', 30),
+    -> (9, 'John Blake', 'Male', 88000.00, 'Pilot', 47),
+    -> (10, 'Sofia Rossi', 'Female', 64000.00, 'Flight Attendant', 28),
+    -> (11, 'Takeshi Mori', 'Male', 76000.00, 'Engineer', 42),
+    -> (12, 'Ayesha Khan', 'Female', 69000.00, 'Flight Attendant', 31),
+    -> (13, 'William Grant', 'Male', 87000.00, 'Co-Pilot', 44),
+    -> (14, 'Nandita Joshi', 'Female', 66000.00, 'Flight Attendant', 26),
+    -> (15, 'Igor Volkov', 'Male', 74000.00, 'Engineer', 39),
+    -> (16, 'Chloe Dubois', 'Female', 63000.00, 'Flight Attendant', 25),
+    -> (17, 'Ahmed El-Sayed', 'Male', 82000.00, 'Pilot', 46),
+    -> (18, 'Meera Iyer', 'Female', 61000.00, 'Flight Attendant', 24),
+    -> (19, 'Liam O’Connor', 'Male', 79000.00, 'Co-Pilot', 36),
+    -> (20, 'Sara Müller', 'Female', 65000.00, 'Flight Attendant', 29);
+Query OK, 20 rows affected (0.05 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> show tables:
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':' at line 1
+mysql> show tables;
++-----------------------------+
+| Tables_in_flightreservation |
++-----------------------------+
+| aircraft                    |
+| crew                        |
+| passenger                   |
+| passport                    |
++-----------------------------+
+4 rows in set (0.01 sec)
+
+mysql> CREATE TABLE Routes (
+    ->     r_no INT PRIMARY KEY,                         -- Unique route number
+    ->     start_location VARCHAR(100),                  -- Starting point of the route
+    ->     end_location VARCHAR(100),                    -- Destination point
+    ->     distance_km DECIMAL(6,2),                     -- Distance in kilometers
+    ->     required_time_minutes INT,                    -- Estimated travel time in minutes
+    ->     fare DECIMAL(8,2),                            -- Fare for the route
+    ->     airport_name VARCHAR(100)                     -- Associated airport name
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO Routes (r_no, start_location, end_location, distance_km, required_time_minutes, fare, airport_name)
+    -> VALUES
+    -> (1, 'Delhi', 'Mumbai', 1400.50, 120, 5500.00, 'Indira Gandhi International Airport'),
+    -> (2, 'Mumbai', 'Chennai', 1336.75, 115, 5200.00, 'Chhatrapati Shivaji Maharaj International Airport'),
+    -> (3, 'Bangalore', 'Hyderabad', 570.20, 75, 3200.00, 'Kempegowda International Airport'),
+    -> (4, 'Kolkata', 'Delhi', 1300.00, 125, 5400.00, 'Netaji Subhas Chandra Bose International Airport'),
+    -> (5, 'Ahmedabad', 'Pune', 660.40, 90, 4100.00, 'Sardar Vallabhbhai Patel International Airport'),
+    -> (6, 'Goa', 'Mumbai', 435.60, 60, 2800.00, 'Goa International Airport'),
+    -> (7, 'Lucknow', 'Patna', 460.00, 65, 3000.00, 'Chaudhary Charan Singh International Airport'),
+    -> (8, 'Jaipur', 'Delhi', 280.00, 50, 2500.00, 'Jaipur International Airport'),
+    -> (9, 'Delhi', 'Dubai', 2180.00, 180, 12000.00, 'Indira Gandhi International Airport'),
+    -> (10, 'Mumbai', 'Singapore', 3920.00, 300, 18000.00, 'Chhatrapati Shivaji Maharaj International Airport'),
+    -> (11, 'Chennai', 'Colombo', 670.00, 85, 6000.00, 'Chennai International Airport'),
+    -> (12, 'Hyderabad', 'Bangkok', 2500.00, 210, 15000.00, 'Rajiv Gandhi International Airport'),
+    -> (13, 'Bangalore', 'Dubai', 2700.00, 195, 13500.00, 'Kempegowda International Airport'),
+    -> (14, 'Kolkata', 'Dhaka', 250.00, 45, 2200.00, 'Netaji Subhas Chandra Bose International Airport'),
+    -> (15, 'Pune', 'Delhi', 1150.00, 110, 5000.00, 'Pune International Airport'),
+    -> (16, 'Mumbai', 'London', 7200.00, 540, 35000.00, 'Chhatrapati Shivaji Maharaj International Airport'),
+    -> (17, 'Delhi', 'New York', 11700.00, 840, 48000.00, 'Indira Gandhi International Airport'),
+    -> (18, 'Bangalore', 'San Francisco', 13600.00, 960, 52000.00, 'Kempegowda International Airport'),
+    -> (19, 'Chennai', 'Tokyo', 6700.00, 480, 32000.00, 'Chennai International Airport'),
+    -> (20, 'Hyderabad', 'Melbourne', 10200.00, 720, 45000.00, 'Rajiv Gandhi International Airport');
+ERROR 1264 (22003): Out of range value for column 'distance_km' at row 17
+mysql> ALTER TABLE Routes MODIFY distance_km DECIMAL(10,2);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Routes (r_no, start_location, end_location, distance_km, required_time_minutes, fare, airport_name)
+    -> VALUES
+    -> (1, 'Delhi', 'Mumbai', 1400.50, 120, 5500.00, 'Indira Gandhi International Airport'),
+    -> (2, 'Mumbai', 'Chennai', 1336.75, 115, 5200.00, 'Chhatrapati Shivaji Maharaj International Airport'),
+    -> (3, 'Bangalore', 'Hyderabad', 570.20, 75, 3200.00, 'Kempegowda International Airport'),
+    -> (4, 'Kolkata', 'Delhi', 1300.00, 125, 5400.00, 'Netaji Subhas Chandra Bose International Airport'),
+    -> (5, 'Ahmedabad', 'Pune', 660.40, 90, 4100.00, 'Sardar Vallabhbhai Patel International Airport'),
+    -> (6, 'Goa', 'Mumbai', 435.60, 60, 2800.00, 'Goa International Airport'),
+    -> (7, 'Lucknow', 'Patna', 460.00, 65, 3000.00, 'Chaudhary Charan Singh International Airport'),
+    -> (8, 'Jaipur', 'Delhi', 280.00, 50, 2500.00, 'Jaipur International Airport'),
+    -> (9, 'Delhi', 'Dubai', 2180.00, 180, 12000.00, 'Indira Gandhi International Airport'),
+    -> (10, 'Mumbai', 'Singapore', 3920.00, 300, 18000.00, 'Chhatrapati Shivaji Maharaj International Airport'),
+    -> (11, 'Chennai', 'Colombo', 670.00, 85, 6000.00, 'Chennai International Airport'),
+    -> (12, 'Hyderabad', 'Bangkok', 2500.00, 210, 15000.00, 'Rajiv Gandhi International Airport'),
+    -> (13, 'Bangalore', 'Dubai', 2700.00, 195, 13500.00, 'Kempegowda International Airport'),
+    -> (14, 'Kolkata', 'Dhaka', 250.00, 45, 2200.00, 'Netaji Subhas Chandra Bose International Airport'),
+    -> (15, 'Pune', 'Delhi', 1150.00, 110, 5000.00, 'Pune International Airport'),
+    -> (16, 'Mumbai', 'London', 7200.00, 540, 35000.00, 'Chhatrapati Shivaji Maharaj International Airport'),
+    -> (17, 'Delhi', 'New York', 11700.00, 840, 48000.00, 'Indira Gandhi International Airport'),
+    -> (18, 'Bangalore', 'San Francisco', 13600.00, 960, 52000.00, 'Kempegowda International Airport'),
+    -> (19, 'Chennai', 'Tokyo', 6700.00, 480, 32000.00, 'Chennai International Airport'),
+    -> (20, 'Hyderabad', 'Melbourne', 10200.00, 720, 45000.00, 'Rajiv Gandhi International Airport');
+Query OK, 20 rows affected (0.05 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Flight (
+    ->     f_id INT PRIMARY KEY,                          -- Unique flight ID
+    ->     f_number VARCHAR(20),                          -- Flight number (e.g., AI202, BA178)
+    ->     origin VARCHAR(100),                           -- Departure city or airport
+    ->     destination VARCHAR(100),                      -- Arrival city or airport
+    ->     flight_date DATE,                              -- Date of the flight
+    ->     arrival_time TIME,                             -- Scheduled arrival time
+    ->     departure_time TIME,                           -- Scheduled departure time
+    ->     delay_minutes INT DEFAULT 0,                   -- Delay in minutes (0 if on time)
+    ->     a_id INT,                                      -- Foreign key to Aircraft
+    ->
+    ->     FOREIGN KEY (a_id) REFERENCES Aircraft(a_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> INSERT INTO Flight (f_id, f_number, origin, destination, flight_date, arrival_time, departure_time, delay_minutes, a_id)
+    -> VALUES
+    -> (1, 'AI101', 'Delhi', 'Mumbai', '2025-09-13', '10:30:00', '08:00:00', 0, 1),
+    -> (2, 'AI102', 'Mumbai', 'Chennai', '2025-09-13', '13:15:00', '11:00:00', 15, 2),
+    -> (3, 'AI103', 'Bangalore', 'Hyderabad', '2025-09-13', '09:45:00', '08:30:00', 0, 4),
+    -> (4, 'AI104', 'Kolkata', 'Delhi', '2025-09-13', '17:00:00', '14:30:00', 30, 5),
+    -> (5, 'AI105', 'Ahmedabad', 'Pune', '2025-09-13', '12:20:00', '10:30:00', 0, 7),
+    -> (6, 'AI106', 'Goa', 'Mumbai', '2025-09-13', '11:00:00', '09:30:00', 0, 8),
+    -> (7, 'AI107', 'Lucknow', 'Patna', '2025-09-13', '15:10:00', '13:30:00', 10, 9),
+    -> (8, 'AI108', 'Jaipur', 'Delhi', '2025-09-13', '08:50:00', '07:30:00', 0, 10),
+    -> (9, 'AI109', 'Delhi', 'Dubai', '2025-09-13', '20:00:00', '16:30:00', 0, 1),
+    -> (10, 'AI110', 'Mumbai', 'Singapore', '2025-09-13', '23:45:00', '18:00:00', 45, 2),
+    -> (11, 'AI111', 'Chennai', 'Colombo', '2025-09-13', '14:00:00', '12:30:00', 0, 4),
+    -> (12, 'AI112', 'Hyderabad', 'Bangkok', '2025-09-13', '19:30:00', '15:00:00', 0, 5),
+    -> (13, 'AI113', 'Bangalore', 'Dubai', '2025-09-13', '22:15:00', '18:30:00', 20, 7),
+    -> (14, 'AI114', 'Kolkata', 'Dhaka', '2025-09-13', '11:40:00', '10:00:00', 0, 8),
+    -> (15, 'AI115', 'Pune', 'Delhi', '2025-09-13', '16:00:00', '13:30:00', 0, 9),
+    -> (16, 'AI116', 'Mumbai', 'London', '2025-09-13', '06:30:00', '00:30:00', 60, 10),
+    -> (17, 'AI117', 'Delhi', 'New York', '2025-09-13', '14:00:00', '02:00:00', 0, 1),
+    -> (18, 'AI118', 'Bangalore', 'San Francisco', '2025-09-13', '18:00:00', '04:30:00', 90, 2),
+    -> (19, 'AI119', 'Chennai', 'Tokyo', '2025-09-13', '20:30:00', '10:00:00', 0, 4),
+    -> (20, 'AI120', 'Hyderabad', 'Melbourne', '2025-09-13', '22:00:00', '08:00:00', 0, 5);
+Query OK, 20 rows affected (0.04 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> show tables;
++-----------------------------+
+| Tables_in_flightreservation |
++-----------------------------+
+| aircraft                    |
+| crew                        |
+| flight                      |
+| passenger                   |
+| passport                    |
+| routes                      |
++-----------------------------+
+6 rows in set (0.01 sec)
+
+mysql> CREATE TABLE Flight_Crew (
+    ->     flight_crew_id INT PRIMARY KEY,         -- Unique assignment ID
+    ->     c_id INT,                               -- Foreign key to Crew
+    ->     f_id INT,                               -- Foreign key to Flight
+    ->
+    ->     FOREIGN KEY (c_id) REFERENCES Crew(c_id),
+    ->     FOREIGN KEY (f_id) REFERENCES Flight(f_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> select * from flight_crew;
+Empty set (0.01 sec)
+
+mysql> INSERT INTO Flight_Crew (flight_crew_id, c_id, f_id)
+    -> VALUES
+    -> (1, 1, 1),
+    -> (2, 2, 1),
+    -> (3, 3, 2),
+    -> (4, 4, 2),
+    -> (5, 5, 3),
+    -> (6, 6, 3),
+    -> (7, 7, 4),
+    -> (8, 8, 4),
+    -> (9, 9, 5),
+    -> (10, 10, 5),
+    -> (11, 11, 6),
+    -> (12, 12, 6),
+    -> (13, 13, 7),
+    -> (14, 14, 7),
+    -> (15, 15, 8),
+    -> (16, 16, 8),
+    -> (17, 17, 9),
+    -> (18, 18, 9),
+    -> (19, 19, 10),
+    -> (20, 20, 10);
+Query OK, 20 rows affected (0.04 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Luggage (
+    ->     l_id INT PRIMARY KEY,                         -- Unique luggage ID
+    ->     p_id INT,                                     -- Foreign key to Passenger
+    ->     f_id INT,                                     -- Foreign key to Flight
+    ->     weight DECIMAL(5,2),                          -- Weight in kilograms (e.g., 23.50)
+    ->     type_of_bag VARCHAR(50),                      -- e.g., Cabin, Check-in, Oversized
+    ->
+    ->     FOREIGN KEY (p_id) REFERENCES Passenger(p_id),
+    ->     FOREIGN KEY (f_id) REFERENCES Flight(f_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> INSERT INTO Luggage (l_id, p_id, f_id, weight, type_of_bag)
+    -> VALUES
+    -> (1, 1, 1, 23.50, 'Trolley'),
+    -> (2, 2, 1, 7.00, 'School Bag'),
+    -> (3, 3, 2, 25.00, 'College Bag'),
+    -> (4, 4, 2, 8.50, 'Office Bag'),
+    -> (5, 5, 3, 30.00, 'Trolley'),
+    -> (6, 6, 3, 6.80, 'School Bag'),
+    -> (7, 7, 4, 22.00, 'College Bag'),
+    -> (8, 8, 4, 9.00, 'Office Bag'),
+    -> (9, 9, 5, 24.50, 'Trolley'),
+    -> (10, 10, 5, 7.20, 'School Bag'),
+    -> (11, 11, 6, 26.00, 'College Bag'),
+    -> (12, 12, 6, 8.00, 'Office Bag'),
+    -> (13, 13, 7, 28.00, 'Trolley'),
+    -> (14, 14, 7, 6.50, 'School Bag'),
+    -> (15, 15, 8, 21.00, 'College Bag'),
+    -> (16, 16, 8, 7.80, 'Office Bag'),
+    -> (17, 17, 9, 29.00, 'Trolley'),
+    -> (18, 18, 9, 8.20, 'School Bag'),
+    -> (19, 19, 10, 32.00, 'College Bag'),
+    -> (20, 20, 10, 6.90, 'Office Bag');
+Query OK, 20 rows affected (0.06 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> CREATE TABLE Booking (
+    ->     b_id INT PRIMARY KEY,              -- Unique booking ID
+    ->     f_id INT,                          -- Foreign key to Flight
+    ->     p_id INT,                          -- Foreign key to Passenger
+    ->
+    ->     FOREIGN KEY (f_id) REFERENCES Flight(f_id),
+    ->     FOREIGN KEY (p_id) REFERENCES Passenger(p_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> INSERT INTO Booking (b_id, f_id, p_id)
+    -> VALUES
+    -> (1, 1, 1),
+    -> (2, 1, 2),
+    -> (3, 2, 3),
+    -> (4, 2, 4),
+    -> (5, 3, 5),
+    -> (6, 3, 6),
+    -> (7, 4, 7),
+    -> (8, 4, 8),
+    -> (9, 5, 9),
+    -> (10, 5, 10),
+    -> (11, 6, 11),
+    -> (12, 6, 12),
+    -> (13, 7, 13),
+    -> (14, 7, 14),
+    -> (15, 8, 15),
+    -> (16, 8, 16),
+    -> (17, 9, 17),
+    -> (18, 9, 18),
+    -> (19, 10, 19),
+    -> (20, 10, 20);
+Query OK, 20 rows affected (0.06 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Flight_Route (
+    ->     f_r_id INT PRIMARY KEY,              -- Unique flight-route mapping ID
+    ->     f_id INT,                            -- Foreign key to Flight
+    ->     r_no INT,                            -- Foreign key to Routes
+    ->     b_id INT,                            -- Foreign key to Booking
+    ->
+    ->     FOREIGN KEY (f_id) REFERENCES Flight(f_id),
+    ->     FOREIGN KEY (r_no) REFERENCES Routes(r_no),
+    ->     FOREIGN KEY (b_id) REFERENCES Booking(b_id)
+    -> );
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> INSERT INTO Flight_Route (f_r_id, f_id, r_no, b_id)
+    -> VALUES
+    -> (1, 1, 1, 1),
+    -> (2, 1, 1, 2),
+    -> (3, 2, 2, 3),
+    -> (4, 2, 2, 4),
+    -> (5, 3, 3, 5),
+    -> (6, 3, 3, 6),
+    -> (7, 4, 4, 7),
+    -> (8, 4, 4, 8),
+    -> (9, 5, 5, 9),
+    -> (10, 5, 5, 10),
+    -> (11, 6, 6, 11),
+    -> (12, 6, 6, 12),
+    -> (13, 7, 7, 13),
+    -> (14, 7, 7, 14),
+    -> (15, 8, 8, 15),
+    -> (16, 8, 8, 16),
+    -> (17, 9, 9, 17),
+    -> (18, 9, 9, 18),
+    -> (19, 10, 10, 19),
+    -> (20, 10, 10, 20);
+Query OK, 20 rows affected (0.05 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Payment (
+    ->     pay_id INT PRIMARY KEY,               -- Unique payment ID
+    ->     b_id INT,                             -- Foreign key to Booking
+    ->     amount DECIMAL(10,2),                 -- Payment amount (e.g., ₹9999.99)
+    ->     pay_date DATE,                        -- Date of payment
+    ->     method VARCHAR(50),                   -- Payment method (e.g., UPI, Card, NetBanking)
+    ->     status VARCHAR(20),                   -- Payment status (e.g., Success, Pending, Failed)
+    ->
+    ->     FOREIGN KEY (b_id) REFERENCES Booking(b_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO Payment (pay_id, b_id, amount, pay_date, method, status)
+    -> VALUES
+    -> (1, 1, 5500.00, '2025-09-10', 'UPI', 'Success'),
+    -> (2, 2, 5500.00, '2025-09-10', 'Credit Card', 'Success'),
+    -> (3, 3, 5200.00, '2025-09-10', 'NetBanking', 'Success'),
+    -> (4, 4, 5200.00, '2025-09-10', 'Debit Card', 'Success'),
+    -> (5, 5, 3200.00, '2025-09-11', 'UPI', 'Success'),
+    -> (6, 6, 3200.00, '2025-09-11', 'Credit Card', 'Success'),
+    -> (7, 7, 5400.00, '2025-09-11', 'NetBanking', 'Success'),
+    -> (8, 8, 5400.00, '2025-09-11', 'UPI', 'Success'),
+    -> (9, 9, 4100.00, '2025-09-12', 'Debit Card', 'Success'),
+    -> (10, 10, 4100.00, '2025-09-12', 'UPI', 'Success'),
+    -> (11, 11, 2800.00, '2025-09-12', 'Credit Card', 'Success'),
+    -> (12, 12, 2800.00, '2025-09-12', 'NetBanking', 'Success'),
+    -> (13, 13, 3000.00, '2025-09-12', 'UPI', 'Success'),
+    -> (14, 14, 3000.00, '2025-09-12', 'Debit Card', 'Success'),
+    -> (15, 15, 2500.00, '2025-09-12', 'UPI', 'Success'),
+    -> (16, 16, 2500.00, '2025-09-12', 'Credit Card', 'Success'),
+    -> (17, 17, 12000.00, '2025-09-12', 'NetBanking', 'Success'),
+    -> (18, 18, 12000.00, '2025-09-12', 'UPI', 'Pending'),
+    -> (19, 19, 18000.00, '2025-09-12', 'Credit Card', 'Success'),
+    -> (20, 20, 18000.00, '2025-09-12', 'Debit Card', 'Failed');
+Query OK, 20 rows affected (0.02 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> delimiter $
+mysql> CREATE TABLE Itinerary (
+    ->     it_id INT PRIMARY KEY,              -- Unique itinerary ID
+    ->     p_id INT,                           -- Foreign key to Passenger
+    ->     b_id INT,                           -- Foreign key to Booking
+    ->     sequence INT,                       -- Order of travel (e.g., 1st leg, 2nd leg)
+    ->
+    ->     FOREIGN KEY (p_id) REFERENCES Passenger(p_id),
+    ->     FOREIGN KEY (b_id) REFERENCES Booking(b_id)
+    -> );
+    -> $
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> show tables$
++-----------------------------+
+| Tables_in_flightreservation |
++-----------------------------+
+| aircraft                    |
+| booking                     |
+| crew                        |
+| flight                      |
+| flight_crew                 |
+| flight_route                |
+| itinerary                   |
+| luggage                     |
+| passenger                   |
+| passport                    |
+| payment                     |
+| routes                      |
++-----------------------------+
+12 rows in set (0.00 sec)
+
+mysql> ^C
+mysql> ;
+    -> $
+ERROR 1065 (42000): Query was empty
+mysql> INSERT INTO Itinerary (it_id, p_id, b_id, sequence)
+    -> VALUES
+    -> (1, 1, 1, 1),
+    -> (2, 1, 2, 2),
+    -> (3, 2, 3, 1),
+    -> (4, 2, 4, 2),
+    -> (5, 3, 5, 1),
+    -> (6, 3, 6, 2),
+    -> (7, 4, 7, 1),
+    -> (8, 4, 8, 2),
+    -> (9, 5, 9, 1),
+    -> (10, 5, 10, 2),
+    -> (11, 6, 11, 1),
+    -> (12, 6, 12, 2),
+    -> (13, 7, 13, 1),
+    -> (14, 7, 14, 2),
+    -> (15, 8, 15, 1),
+    -> (16, 8, 16, 2),
+    -> (17, 9, 17, 1),
+    -> (18, 9, 18, 2),
+    -> (19, 10, 19, 1),
+    -> (20, 10, 20, 2);
+    -> $
+Query OK, 20 rows affected (0.02 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+mysql> SELECT b_id, COUNT(*) AS usage_count
+    -> FROM Itinerary
+    -> GROUP BY b_id;
+    -> $
++------+-------------+
+| b_id | usage_count |
++------+-------------+
+|    1 |           1 |
+|    2 |           1 |
+|    3 |           1 |
+|    4 |           1 |
+|    5 |           1 |
+|    6 |           1 |
+|    7 |           1 |
+|    8 |           1 |
+|    9 |           1 |
+|   10 |           1 |
+|   11 |           1 |
+|   12 |           1 |
+|   13 |           1 |
+|   14 |           1 |
+|   15 |           1 |
+|   16 |           1 |
+|   17 |           1 |
+|   18 |           1 |
+|   19 |           1 |
+|   20 |           1 |
++------+-------------+
+20 rows in set (0.01 sec)
+
+
+
+
+
